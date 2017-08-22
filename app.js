@@ -31,12 +31,12 @@ var mainArray = [picOne, picTwo, picThree, picFour, picFive, picSix, picSeven, p
 var form = document.getElementsByTagName('form')[0];
 var createImg = function(parent, source, imgClass, idName){
   var element = document.createElement('img');
+  var body = document.getElementsByClassName('body');
   element.setAttribute('src', source);
   element.setAttribute('class', imgClass);
   element.setAttribute('id', idName);
-  // element.setAttribute('onclick', )
   console.log(element);
-  parent.appendChild(element);
+  body.appendChild(element);
 };
 var initialFunction = function(){
   for (var i = 0; i < 3; i++){
