@@ -103,3 +103,28 @@ var picture = document.getElementsByClassName('img');
 for (var l = 0; l < picture.length; l++){
   picture[l].addEventListener('click', PicCycle);
 };
+
+function chart() {
+  var canvas = document.getElementById('canvas');
+  var ctx = canvas.getContext('2d');
+  var selectChart = new Chart(ctx, {
+    type: 'bar',
+    data: {
+      labels: ['bag', 'banana', 'bathroom' ,'boots', 'breakfast', 'bubblegum', 'chair', 'cthulhu', 'dogDuck', 'dragon', 'pen', 'petSweep', 'scissor', 'shark', 'sweep', 'tauntaun', 'unicorn', 'usb', 'waterCan', 'wineGlass'],
+      datasets: [
+        {
+          label: 'click',
+          data: function clicks(),
+          backgroundColor: brown,
+        },
+        {
+          label: 'shown',
+          data: // show function,
+          backgroundColor: brown,
+        }
+      ]
+    },
+    options: {
+    }
+  });
+}
