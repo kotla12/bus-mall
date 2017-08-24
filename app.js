@@ -1,7 +1,7 @@
 'use strict';
 
 var totalClicks = 0;
-var maxClicks = 5;
+var maxClicks = 25;
 
 // make a constructor function for all of the items we're selling
 function Item (name, filePath, id) {
@@ -79,14 +79,31 @@ function onClick (event){
 
     // when the user is done clicking, list results of the click tracker.
     var list = document.getElementById('list');
+    if(localStorage.getItem('clicks')){
+      var clArray = JSON.parse(localStorage.getItem('clicks'));
+      var shArray = JSON.parse(localStorage.getItem('clicks'));
+      for(var i = 0; i < allItems.length; i ++){
+        allItems[i].timesClicked += clArray[i];
+        allItems[i].timesShown += shArray[i];
+      }
+    }
     for (var j = 0; j < allItems.length; j++) {
       // for each item in the allItems array, show how many times each one was clicked.
       // create the list items to go into the list
       var li = document.createElement('li');
       // insert text within each list item
-      li.innerText = allItems[j].name + ' was clicked ' + allItems[j].timesClicked + ' times';
+      li.innerText = allItems[j].name + ' was clicked ' + allItems[j].timesClicked + ' times and was shown ' + allItems[j].timesShown;
       // append the list items to "list"
       list.appendChild(li);
     }
+    var clicksArray = [];
+    var shownArray = [];
+    for(var i = 0; i < allItems.length; i ++){
+      clicksArray.push(allItems[i].timesClicked);
+      shownArray.push(allItems[i].timesShown);
+    }
+
+    localStorage.setItem('clicks', JSON.stringify(clicksArray));
+    localStorage.setItem('shows', JSON.stringify(shownArray));
   }
 }
