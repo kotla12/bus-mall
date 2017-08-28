@@ -1,8 +1,68 @@
-html {
-  rgba(128, 128, 128, 0.5);
-}
-.img {
+#image-1 {
   display: inline-block;
   width: 33%;
-  height: auto;
+  height: 200px;
+  position: relative;
+  top: 53px;
+  border: 2px black solid;
+  border-collapse: collapse;
+  border-radius: 10px;
+}
+#image-2 {
+  display: inline-block;
+  width: 33%;
+  height: 200px;
+  position: relative;
+  top: 53px;
+  border: 2px black solid;
+  border-collapse: collapse;
+  border-radius: 10px;
+}
+#image-3 {
+  display: inline-block;
+  width: 33%;
+  height: 200px;
+  position: relative;
+  top: 53px;
+  border: 2px black solid;
+  border-collapse: collapse;
+  border-radius: 10px;
+}
+
+body{
+    background-color: rgba(128, 128, 128, 0.5);
+    margin: auto;
+}
+
+h1{
+  font-family: monospace;
+  color: #8BC34A;
+  font-size: 70px;
+  border: 1px solid #FFEB3B;
+  width: 76%;
+  text-align: center;
+}
+
+p{
+  width: 66%;
+  position: relative;
+  top: 50px;
+  font-family: sans-serif;
+  font-size: 20px;
+  color: #3F51B5;
+  padding: 33px;
+}
+
+div{
+  position: relative;
+  top: 100px;
+}
+
+ol{
+  font-family: monospace;
+  position: relative;
+  top: 70px;
+  left: 50px;
+  font-family: monospace;
+  list-style-type: hiragana;
 }

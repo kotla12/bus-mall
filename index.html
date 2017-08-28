@@ -2,15 +2,21 @@
 <html>
   <head>
     <meta charset="utf-8">
-    <title></title>
+    <title>BusMall.</title>
+    <link href='style.css' type='text/css' rel='stylesheet' />
+    <script src = "https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.6.0/Chart.min.js">  </script>
   </head>
   <body>
+    <h1>Select A Product</h1>
+    <p>Please choose one of these prodecuts that you would most likely to buy. You will be shown 3 random images and will make up to 25 choices.</p>
     <img id="image-1" class="clickable" />
     <img id="image-2" class="clickable" />
     <img id="image-3" class="clickable" />
-    <ul id="list">
-
-    </ul>
+    <ol id="list">
+    </ol>
+    <div>
+  <canvas id="canvas" width="300" height="300"></canvas>
+</div>
   </body>
   <script src="app.js" charset="utf-8"></script>
 </html>

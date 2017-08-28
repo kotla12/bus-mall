@@ -104,7 +104,30 @@ function onClick (event){
       shownArray.push(allItems[i].timesShown);
     }
 
-    localStorage.setItem('clicks', JSON.stringify(clicksArray));
-    localStorage.setItem('shows', JSON.stringify(shownArray));
+
   }
 }
+var canvas = document.getElementById('canvas');
+var ctx = canvas.getContext('2d');
+var data = {
+  labels: allItems,
+  datasets: [{
+    label: 'times clicked',
+    backgroundColor: 'blue',
+    data: clicksArray
+  },{
+    label: 'times shown',
+    backgroundColor: 'red',
+    data: shownArray
+  }]
+};
+var myChart = new Chart(ctx, {
+  type: 'bar',
+  data: data,
+  options:{
+    barValueSpacing: 20,
+    maintainAspectRatio: false,
+  }
+});
+localStorage.setItem('clicks', JSON.stringify(clicksArray));
+localStorage.setItem('shows', JSON.stringify(shownArray));
