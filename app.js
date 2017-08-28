@@ -1,105 +1,133 @@
 'use strict';
-function Pics(name, url, shown, clicked){
+
+var totalClicks = 0;
+var maxClicks = 25;
+
+// make a constructor function for all of the items we're selling
+function Item (name, filePath, id) {
   this.name = name;
-  this.url = url;
-  this.shown = shown;
-  this.clicked = clicked;
+  this.filePath = filePath;
+  this.timesShown = 0;
+  this.timesClicked = 0;
+  this.id = id;
+  allItems.push(this);
 }
-var picOne = new Pics('bag', 'assets/bag.jpg', 0, 0);
-var picTwo = new Pics('banana', 'assets/banana.jpg', 0, 0);
-var picThree = new Pics('bathroom', 'assets/bathroom.jpg', 0, 0);
-var picFour = new Pics('boots', 'assets/boots.jpg', 0, 0);
-var picFive = new Pics('breakfast', 'assets/breakfast.jpg', 0, 0);
-var picSix = new Pics('bubblegum', 'assets/bubblegum.jpg', 0, 0);
-var picSeven = new Pics('chair', 'assets/chair.jpg', 0, 0);
-var picEight = new Pics('cthulhu', 'assets/cthulhu.jpg', 0, 0);
-var picNine = new Pics('dogDuck', 'assets/dog-duck.jpg', 0, 0);
-var picTen = new Pics('dragon', 'assets/dragon.jpg', 0, 0);
-var picEleven = new Pics('pen', 'assets/pen.jpg', 0, 0);
-var picTwelve = new Pics('petSweep', 'assets/pet-sweep.jpg', 0, 0);
-var picThirteen = new Pics('scissors', 'assets/scissors.jpg', 0, 0);
-var picFourteen = new Pics('shark', 'assets/shark.jpg', 0, 0);
-var picFifteen = new Pics('sweep', 'assets/sweep.png', 0, 0);
-var picSixteen = new Pics('tauntaun', 'assets/tauntaun.jpg', 0, 0);
-var picSeventeen = new Pics('unicorn', 'assets/unicorn.jpg', 0, 0);
-var picEighteen = new Pics('usb', 'assets/usb.gif', 0, 0);
-var picNineteen = new Pics('waterCan', 'assets/water-can.jpg', 0, 0);
-var picTwenty = new Pics('wineGlass', 'assets/wine-glass.jpg', 0, 0);
-var selectionCounter = 0;
-var displayArray = [];
-var mainArray = [picOne, picTwo, picThree, picFour, picFive, picSix, picSeven, picEight, picNine, picTen, picEleven, picTwelve, picThirteen, picFourteen, picFifteen, picSixteen, picSeventeen, picEighteen, picNineteen, picTwenty];
-var form = document.getElementsByTagName('form')[0];
-var createImg = function(parent, source, imgClass, idName){
-  var element = document.createElement('img');
-  element.setAttribute('src', source);
-  element.setAttribute('class', imgClass);
-  element.setAttribute('id', idName);
-  console.log(element);
-  parent.appendChild(element);
-};
-var initialFunction = function(){
-  for (var i = 0; i < 3; i++){
-    var rand = Math.floor(Math.random() * mainArray.length);
-    var placeholder = mainArray[rand];
-    displayArray.push(placeholder);
-    mainArray.splice(rand, 1);
-    createImg(form, displayArray[i].url, 'img', displayArray[i].name);
-  };
-};
-initialFunction();
-var displayTotals = function(){
-  var body = document.getElementsByTagName('body')[0];
-  var unList = document.createElement('ul');
-  unList.setAttribute('class', 'unList');
-  body.appendChild(unList);
-  for(var i = 0; i < displayArray.length; i++){
-    var listItem = document.createElement('li');
-    listItem.innerText = 'The ' + displayArray[i].name + ' was displayed ' + displayArray[i].shown + ' times and was chosen ' + displayArray[i].clicked + ' times.';
-    unList.appendChild(listItem);
-  };
-  for(var i = 0; i < mainArray.length; i++){
-    var listItem = document.createElement('li');
-    listItem.innerText = 'The ' + mainArray[i].name + ' was displayed ' + mainArray[i].shown + ' times and was chosen ' + mainArray[i].clicked + ' times.';
-    unList.appendChild(listItem);
-  };
-};
-var PicCycle = function(event){
-  event.preventDefault();
-  for (var i = 0; i < displayArray.length; i++){
-    if (displayArray[i].name == event.currentTarget.id){
-      displayArray[i].clicked += 1;
+
+var allItems = []; // array to hold all of our Item instances
+var names = ['bag', 'banana', 'bathroom', 'boots', 'breakfast', 'bubblegum', 'chair', 'cthulhu', 'dog-duck', 'dragon', 'pen', 'pet-sweep', 'scissors', 'shark', 'sweep', 'tauntaun', 'unicorn', 'usb', 'water-can', 'wine-glass'];
+var paths = ['imgs/bag.jpg', 'imgs/banana.jpg', 'imgs/bathroom.jpg', 'imgs/boots.jpg', 'imgs/breakfast.jpg', 'imgs/bubblegum.jpg', 'imgs/chair.jpg', 'imgs/cthulhu.jpg', 'imgs/dog-duck.jpg', 'imgs/dragon.jpg', 'imgs/pen.jpg', 'imgs/pet-sweep.jpg', 'imgs/scissors.jpg', 'imgs/shark.jpg', 'imgs/sweep.png', 'imgs/tauntaun.jpg', 'imgs/unicorn.jpg', 'imgs/usb.gif', 'imgs/water-can.jpg', 'imgs/wine-glass.jpg'];
+var ids = ['bag.jpg', 'banana.jpg', 'bathroom.jpg', 'boots.jpg', 'breakfast.jpg', 'bubblegum.jpg', 'chair.jpg', 'cthulhu.jpg', 'dog-duck.jpg', 'dragon.jpg', 'pen.jpg', 'pet-sweep.jpg', 'scissors.jpg', 'shark.jpg', 'sweep.png', 'tauntaun.jpg', 'unicorn.jpg', 'usb.gif', 'water-can.jpg', 'wine-glass.jpg'];
+
+function createItems (){
+  for (var i = 0; i < names.length; i++){
+    // for each iteration, create a new Item object using the names, paths, and ids arrays
+    new Item(names[i], paths[i], ids[i]);
+  }
+}
+createItems();
+
+// initialize two empty arrays
+var thisRound = []; // contains whatever's generated this round
+var lastRound = []; // contains whatever was generated last round
+
+// make a function that randomly selects 3 images out of the images we've already created.
+function makeThreeImages (){
+  // write a for loop, where each iteration will select a distinct image
+  // distinct: images haven't been used in the current set or in the last set
+  for (var i = 1; i < 4; i++) {
+    var indexNum = Math.floor(Math.random() * allItems.length);
+    // check if I've already used this number or not
+    if (lastRound.includes(indexNum) || thisRound.includes(indexNum)) {
+      i--; // allows the for loop to step back one iteration
+    } else {
+      // we have a unique number, add it to this round of numbers
+      thisRound.push(indexNum);
+      allItems[indexNum].timesShown++; // increase the number of times shown for the Item instance we've selected
+      var linkedImage = document.getElementById('image-' + i);
+      linkedImage.setAttribute('src', allItems[indexNum].filePath);
+      linkedImage.setAttribute('itemIdx', indexNum);
     }
   }
-  selectionCounter += 1;
-  var displayPlaceHolder = [];
-  for (var x = 0; x < displayArray.length; x++){
-    displayPlaceHolder.push(displayArray[x]);
+  // assign lastRound to thisRound so that this current set of numbers is reserved
+  lastRound = thisRound;
+  thisRound = [];
+}
+makeThreeImages();
+
+// add an event listener to every img tag
+for (var i = 0; i < document.getElementsByClassName('clickable').length; i++) {
+  var image = document.getElementById('image-' + (i + 1));
+  image.addEventListener('click', onClick);
+}
+
+// onClick registers the fact that the user clicked on an image
+// increment up by 1 the value of timesClicked for the item that owns the image that was clicked
+// it then kicks off the makeThreeImages function
+function onClick (event){
+
+  var itemIdx = parseInt(event.target.getAttribute('itemIdx'));
+  var itemIWant = allItems[itemIdx];
+  itemIWant.timesClicked++;
+  makeThreeImages();
+  totalClicks++;
+  // if i'm at my max clicks, remove the event listeners and show the list
+  if (totalClicks === maxClicks) {
+    // otherwise remove the event listeners from all the image tags.
+    for (var i = 0; i < document.getElementsByClassName('clickable').length; i++) {
+      var image = document.getElementById('image-' + (i + 1));
+      image.removeEventListener('click', onClick);
+    }
+
+    // when the user is done clicking, list results of the click tracker.
+    var list = document.getElementById('list');
+    if(localStorage.getItem('clicks')){
+      var clArray = JSON.parse(localStorage.getItem('clicks'));
+      var shArray = JSON.parse(localStorage.getItem('clicks'));
+      for(var i = 0; i < allItems.length; i ++){
+        allItems[i].timesClicked += clArray[i];
+        allItems[i].timesShown += shArray[i];
+      }
+    }
+    for (var j = 0; j < allItems.length; j++) {
+      // for each item in the allItems array, show how many times each one was clicked.
+      // create the list items to go into the list
+      var li = document.createElement('li');
+      // insert text within each list item
+      li.innerText = allItems[j].name + ' was clicked ' + allItems[j].timesClicked + ' times and was shown ' + allItems[j].timesShown;
+      // append the list items to "list"
+      list.appendChild(li);
+    }
+    var clicksArray = [];
+    var shownArray = [];
+    for(var i = 0; i < allItems.length; i ++){
+      clicksArray.push(allItems[i].timesClicked);
+      shownArray.push(allItems[i].timesShown);
+    }
+
+
   }
-  displayArray.splice(0,3);
-  for (var i = 0; i < 3; i++){
-    var oldPic = document.getElementsByClassName('img')[0];
-    form.removeChild(oldPic);
-    var rand = Math.floor(Math.random() * mainArray.length);
-    var placeholder = mainArray[rand];
-    displayArray.push(placeholder);
-    mainArray.splice(rand, 1);
-    var img = createImg(form, displayArray[i].url, 'img', displayArray[i].name);
-    displayArray[i].shown += 1;
-  };
-  mainArray = mainArray.concat(displayPlaceHolder);
-  displayPlaceHolder = [];
-  var picture = document.getElementsByClassName('img');
-  for (var l = 0; l < picture.length; l++){
-    picture[l].addEventListener('click', PicCycle);
-    if (selectionCounter > 24){
-      picture[l].removeEventListener('click', PicCycle);
-    };
-  };
-  if (selectionCounter > 24){
-    displayTotals();
-  };
+}
+var canvas = document.getElementById('canvas');
+var ctx = canvas.getContext('2d');
+var data = {
+  labels: allItems,
+  datasets: [{
+    label: 'times clicked',
+    backgroundColor: 'blue',
+    data: clicksArray
+  },{
+    label: 'times shown',
+    backgroundColor: 'red',
+    data: shownArray
+  }]
 };
-var picture = document.getElementsByClassName('img');
-for (var l = 0; l < picture.length; l++){
-  picture[l].addEventListener('click', PicCycle);
-};
+var myChart = new Chart(ctx, {
+  type: 'bar',
+  data: data,
+  options:{
+    barValueSpacing: 20,
+    maintainAspectRatio: false,
+  }
+});
+localStorage.setItem('clicks', JSON.stringify(clicksArray));
+localStorage.setItem('shows', JSON.stringify(shownArray));
